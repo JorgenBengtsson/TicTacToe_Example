@@ -26,30 +26,26 @@ namespace TicTacToe_BackEnd.Controllers
 
         // GET: api/<PlayersController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Player> Get()
         {
-            
+            var player = _context.Players.Include(p => p.address).ToList();
 
-            return new string[] { "value1", "value2" };
+            return player;
         }
 
         // GET api/<PlayersController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public int Get(int id)
         {
-            var player = _context.Players.Where(p => p.id == id).Include(p => p.address);
-
-
-            return "value";
+            return id;
         }
 
         // POST api/<PlayersController>
         [HttpPost]
         public void Post([FromBody] PlayerViewModel value)
         {
-            _context.Players.Add(new Player { name = value.name, email = value.email });
+            _context.Players.Add(new Player { name = value.name, email = value.email, address = new Address { street = value.address } });
             _context.SaveChanges();
-
 
         }
 

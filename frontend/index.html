@@ -2,30 +2,90 @@
 <html lang="en">
   <head>
     <title>Tic Tac Toe</title>
+    <style>
+      .playerName {
+        background-color: azure;
+      }
+      .playerName:hover {
+        cursor: pointer;
+      }
+    </style>
     <script>
+      var toggle = [];
       function sendData() {
         const xhr = new XMLHttpRequest();
         xhr.onload = () => {
           if (xhr.status >= 200 && xhr.status < 300) {
-            const response = JSON.parse(xhr.responseText);
-            console.log(response);
+            loadPlayers();
           }
         };
         const o = {
           name: document.getElementById("name").value,
           email: document.getElementById("email").value,
+          address: document.getElementById("address").value,
         };
         xhr.open("POST", "https://localhost:44311/Players");
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(JSON.stringify(o));
       }
+      function showPlayers(players) {
+        toggle = [];
+        var ret = "<div>";
+        var id = 0;
+        players.forEach((player) => {
+          ret +=
+            "<p class='playerName' onclick='showAddress(" +
+            id +
+            ")'>" +
+            player.name +
+            "<p id='" +
+            id +
+            "' style='display: none;'>" +
+            player.address.street +
+            "</p></p>";
+          toggle.push({ id: id, state: "none" });
+          id += 1;
+        });
+        ret += "</div>";
+        document.getElementById("playerList").innerHTML = ret;
+      }
+      function loadPlayers() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            showPlayers(JSON.parse(this.response));
+          }
+        };
+        xhttp.open("GET", "https://localhost:44311/players", true);
+        xhttp.send();
+      }
+      function showAddress(id) {
+        var toggleInfo;
+        toggle.forEach((t) => {
+          if (t.id == id) {
+            toggleInfo = t;
+            toggleInfo.state = toggleInfo.state == "none" ? "block" : "none";
+          }
+        });
+        document.getElementById(id).style.display = toggleInfo.state;
+      }
     </script>
   </head>
   <body>
-    <div>
-      Name: <input id="name" type="text" /><br />
-      EMail: <input id="email" type="text" /><br />
-      <button onclick="sendData()">Send</button>
-    </div>
+    <head>
+      TIC TAC TOE
+    </head>
+    <main>
+      <div id="playerList"></div>
+      <div id="signIn">
+        Name: <input id="name" type="text" /><br />
+        EMail: <input id="email" type="text" /><br />
+        Address: <input id="address" type="text" /><br />
+        <button onclick="sendData()">Send</button>
+      </div>
+    </main>
+    <script>
+      loadPlayers();
+    </script>
   </body>
 </html>

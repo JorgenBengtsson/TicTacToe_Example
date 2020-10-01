@@ -9,5 +9,6 @@ namespace TicTacToe_BackEnd.Models
     {
         public string name { get; set; }
         public string email { get; set; }
+        public string address { get; set; }
     }
 }
