@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Tic Tac Toe</title>
+    <script>
+      function sendData() {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            const response = JSON.parse(xhr.responseText);
+            console.log(response);
+          }
+        };
+        const o = {
+          name: document.getElementById("name").value,
+          email: document.getElementById("email").value,
+        };
+        xhr.open("POST", "https://localhost:44311/Players");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(JSON.stringify(o));
+      }
+    </script>
+  </head>
+  <body>
+    <div>
+      Name: <input id="name" type="text" /><br />
+      EMail: <input id="email" type="text" /><br />
+      <button onclick="sendData()">Send</button>
+    </div>
+  </body>
+</html>
